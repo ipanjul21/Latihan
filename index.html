@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dindalicious - Pesan Antar Makanan Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-pink: #E91E63;
+            --light-pink: #FCE4EC;
+            --dark-pink: #AD1457;
+            --cream: #FFF8E1;
+            --dark-brown: #3E2723;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --success-green: #4CAF50;
+            --warning-orange: #FF9800;
+            --info-blue: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--cream);
+            color: var(--dark-brown);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Georgia', serif;
+            color: var(--dark-pink);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-family: 'Georgia', serif;
+            font-size: 2rem;
+            color: var(--primary-pink);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            gap: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-buttons button {
+            background-color: var(--primary-pink);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-buttons button:hover {
+            background-color: var(--dark-pink);
+            transform: translateY(-2px);
+        }
+
+        .nav-buttons button.active {
+            background-color: var(--dark-brown);
+        }
+
+        .cart-icon-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--dark-brown);
+            color: var(--white);
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Location Bar */
+        .location-bar {
+            background-color: var(--light-pink);
+            padding: 15px 0;
+            border-bottom: 1px solid #F8BBD0;
+        }
+
+        .location-input {
+            display: flex;
+            align-items: center;
+            background-color: var(--white);
+            border-radius: 25px;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .location-input i {
+            color: var(--primary-pink);
+            margin-right: 10px;
+        }
+
+        .location-input input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        /* Main Content Area */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Login View */
+        .login-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            background-color: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 2rem;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-pink);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-form button:hover {
+            background-color: var(--dark-pink);
+        }
+
+        /* Search Bar */
+        .search-section {
+            padding: 20px 0;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid var(--primary-pink);
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            background-color: var(--white);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-pink);
+            color: var(--white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Promo Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, var(--primary-pink), var(--dark-pink));
+            color: var(--white);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .promo-banner h3 {
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .category-tab {
+            background-color: var(--white);
+            border: 1px solid var(--primary-pink);
+            color: var(--primary-pink);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab.active, .category-tab:hover {
+            background-color: var(--primary-pink);
+            color: var(--white);
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .menu-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .menu-card-content {
+            padding: 1rem;
+        }
+
+        .menu-card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .menu-card p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .menu-card .price {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--dark-pink);
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart-btn {
+            background-color: var(--primary-pink);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: var(--dark-pink);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--light-pink);
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 15px;
+        }
+
+        .admin-tab {
+            padding: 10px 20px;
+            background-color: var(--light-pink);
+            color: var(--dark-pink);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .admin-tab.active {
+            background-color: var(--primary-pink);
+            color: var(--white);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .admin-content.active {
+            display: block;
+        }
+
+        .admin-form {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 2rem;
+        }
+
+        .admin-form input, .admin-form textarea, .admin-form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .admin-form button {
+            background-color: var(--dark-brown);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .admin-form button:hover {
+            background-color: #5D4037;
+        }
+        
+        .image-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .image-upload-container img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .admin-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-list th, .admin-list td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .admin-list th {
+            background-color: var(--light-pink);
+            color: var(--dark-pink);
+        }
+
+        .admin-list .actions button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: var(--white);
+        }
+
+        .edit-btn { background-color: var(--info-blue); }
+        .delete-btn { background-color: #f44336; }
+        .view-details-btn { background-color: var(--success-green); }
+
+        .status-select {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .status-menunggu-pembayaran { background-color: #607D8B; color: white; }
+        .status-dibayar { background-color: var(--info-blue); color: white; }
+        .status-sedang-diproses { background-color: var(--warning-orange); color: white; }
+        .status-sedang-dikirim { background-color: #9C27B0; color: white; }
+        .status-selesai { background-color: var(--success-green); color: white; }
+        .status-dibatalkan { background-color: #f44336; color: white; }
+
+        /* Category Management */
+        .category-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .category-item {
+            background-color: var(--light-pink);
+            color: var(--dark-pink);
+            padding: 10px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .category-item button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--dark-pink);
+            font-size: 1.1rem;
+        }
+
+        /* Payment Methods Management */
+        .payment-methods-list {
+            display: grid;
+            gap: 1rem;
+        }
+        .payment-method-item {
+            background-color: var(--light-pink);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--primary-pink);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .payment-method-item h4 {
+            margin-bottom: 0.5rem;
+        }
+        .payment-method-item p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        .payment-method-item .details {
+            flex-grow: 1;
+        }
+        .payment-method-item .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Orders View (Customer) */
+        .order-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .order-item h3 {
+            margin-bottom: 10px;
+        }
+
+        .order-item p {
+            margin-bottom: 5px;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100%;
+            background-color: var(--white);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            background-color: var(--primary-pink);
+            color: var(--white);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .cart-item-subtotal {
+            font-weight: bold;
+            color: var(--dark-pink);
+            margin-top: 5px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .quantity-btn {
+            background-color: var(--light-pink);
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .checkout-btn {
+            background-color: var(--primary-pink);
+            color: var(--white);
+            border: none;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background-color: var(--dark-pink);
+        }
+
+        /* Responsive Cart */
+        @media (max-width: 768px) {
+            .cart-sidebar {
+                width: 100%;
+                right: 0;
+                left: 0;
+                bottom: -100vh;
+                top: auto;
+                height: 80vh;
+                border-radius: var(--border-radius) var(--border-radius) 0 0;
+                transition: bottom 0.3s ease;
+            }
+            .cart-sidebar.open {
+                bottom: 0;
+                right: 0;
+            }
+        }
+
+        /* Checkout Form */
+        .checkout-form {
+            padding: 20px;
+        }
+
+        .checkout-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Payment Confirmation Admin */
+        .payment-confirmation-list {
+            display: grid;
+            gap: 1rem;
+        }
+        .payment-confirmation-item {
+            background-color: var(--light-pink);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--primary-pink);
+        }
+        .payment-confirmation-item h4 {
+            margin-bottom: 0.5rem;
+        }
+        .payment-confirmation-item p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .payment-confirmation-item .total {
+            font-weight: bold;
+            color: var(--dark-pink);
+        }
+        .confirm-payment-form {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .confirm-payment-form textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .confirm-payment-form button {
+            background-color: var(--success-green);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            align-self: flex-end;
+        }
+
+        /* Modal */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1001; 
+            left: 0; 
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: auto;
+            padding: 2rem;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 600px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .close-modal {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover,
+        .close-modal:focus {
+            color: var(--dark-brown);
+        }
+
+        .order-details-info {
+            margin-bottom: 20px;
+        }
+
+        .order-details-info p {
+            margin: 5px 0;
+        }
+
+        .order-items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .order-items-table th, .order-items-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .order-items-table th {
+            background-color: var(--light-pink);
+        }
+
+        .order-details-total {
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .payment-note-section {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .payment-note-section p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .payment-note-section strong {
+            color: var(--dark-brown);
+        }
+
+        #confirmPaymentBtn {
+            background-color: var(--success-green);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+        
+        /* Payment Methods */
+        .payment-methods-container {
+            margin: 20px 0;
+        }
+        .payment-methods-container h4 {
+            margin-bottom: 15px;
+            color: var(--dark-brown);
+        }
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .payment-option:hover {
+            border-color: var(--primary-pink);
+        }
+        .payment-option input[type="radio"] {
+            margin-right: 10px;
+        }
+        .payment-option.selected {
+            border-color: var(--primary-pink);
+            background-color: var(--light-pink);
+        }
+        .payment-option i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--dark-pink);
+        }
+        .payment-details-info {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid var(--info-blue);
+        }
+        .payment-details-info p {
+            margin: 5px 0;
+        }
+        .payment-details-info strong {
+            color: var(--dark-brown);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            background-color: var(--dark-brown);
+            color: var(--white);
+            margin-top: 3rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .admin-form {
+                grid-template-columns: 1fr;
+            }
+            .menu-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            .main-header .container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            .main-nav {
+                width: 100%;
+                margin-left: 0;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="#" class="logo">
+                <i class="fas fa-utensils"></i>
+                Dindalicious
+            </a>
+            <nav class="main-nav">
+                <div class="nav-buttons">
+                    <button id="viewCustomerBtn" class="active"><i class="fas fa-store"></i> Beranda</button>
+                    <button id="viewOrdersBtn"><i class="fas fa-receipt"></i> Pesanan Saya</button>
+                    <button id="viewAdminBtn"><i class="fas fa-user-shield"></i> Panel Admin</button>
+                </div>
+                <div class="cart-icon-wrapper" id="cartIcon">
+                    <i class="fas fa-shopping-cart fa-lg"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="location-bar">
+        <div class="container">
+            <div class="location-input">
+                <i class="fas fa-map-marker-alt"></i>
+                <input type="text" id="locationInput" placeholder="Masukkan alamat pengiriman">
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <!-- Customer View -->
+        <section id="customerView" class="view active">
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Cari makanan favorit Anda">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+
+            <div class="promo-banner">
+                <h3>🎉 Promo Spesial Hari Ini!</h3>
+                <p>Diskon 50% untuk pesanan pertama dengan kode <strong>DINDAHEMAT</strong></p>
+            </div>
+
+            <div class="category-tabs">
+                <div class="category-tab active" data-category="all">Semua</div>
+                <!-- Category tabs will be dynamically inserted here -->
+            </div>
+
+            <h2>Menu Rekomendasi</h2>
+            <div id="menuGrid" class="menu-grid">
+                <!-- Menu items will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <!-- Orders View (Customer) -->
+        <section id="ordersView" class="view">
+            <h2>Riwayat Pesanan Saya</h2>
+            <div id="ordersList">
+                <!-- Orders will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <!-- Login View -->
+        <section id="loginView" class="view">
+            <div class="login-container">
+                <h2>Login Admin</h2>
+                <form id="loginForm" class="login-form">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="submit">Masuk</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Admin View -->
+        <section id="adminView" class="view">
+            <div class="admin-panel">
+                <div class="admin-header">
+                    <h2>Dashboard Penjual</h2>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <div class="admin-tabs">
+                            <button class="admin-tab active" data-tab="menu">Kelola Menu</button>
+                            <button class="admin-tab" id="ordersTab" data-tab="orders">
+                                Pesanan Masuk
+                                <span class="notification-badge" id="orderNotificationBadge" style="display: none;">0</span>
+                            </button>
+                            <button class="admin-tab" data-tab="payments">
+                                Konfirmasi Pembayaran
+                                <span class="notification-badge" id="paymentNotificationBadge" style="display: none;">0</span>
+                            </button>
+                            <button class="admin-tab" data-tab="payment-settings">Metode Pembayaran</button>
+                            <button class="admin-tab" data-tab="categories">Kelola Kategori</button>
+                        </div>
+                        <button id="logoutBtn" style="background-color: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">Logout</button>
+                    </div>
+                </div>
+
+                <!-- Menu Management Content -->
+                <div id="menuContent" class="admin-content active">
+                    <form id="menuForm" class="admin-form">
+                        <input type="hidden" id="menuId">
+                        <input type="text" id="menuName" placeholder="Nama Menu" required>
+                        <textarea id="menuDescription" placeholder="Deskripsi" rows="1"></textarea>
+                        <input type="number" id="menuPrice" placeholder="Harga" required>
+                        <select id="menuCategory">
+                            <!-- Options will be dynamically inserted here -->
+                        </select>
+                        <div class="image-upload-container">
+                            <input type="file" id="menuImageFile" accept="image/*" style="display: none;">
+                            <button type="button" id="chooseImageBtn" style="padding: 10px; border-radius:5px; cursor:pointer; background-color: var(--info-blue); color:white; border:none;">Pilih Gambar</button>
+                        </div>
+                        <button type="submit" id="submitBtn">Tambah Menu</button>
+                    </form>
+                    <div class="admin-list">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Gambar</th>
+                                    <th>Nama</th>
+                                    <th>Kategori</th>
+                                    <th>Deskripsi</th>
+                                    <th>Harga</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminMenuList">
+                                <!-- Admin list will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Orders Management Content -->
+                <div id="ordersContent" class="admin-content">
+                    <h3>Daftar Pesanan</h3>
+                    <div class="admin-list">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID Pesanan</th>
+                                    <th>Pemesan</th>
+                                    <th>Tanggal</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminOrdersList">
+                                <!-- Orders list will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Payment Confirmation Content -->
+                <div id="paymentsContent" class="admin-content">
+                    <h3>Konfirmasi Pembayaran</h3>
+                    <div class="payment-confirmation-list" id="paymentConfirmationList">
+                        <!-- Payment confirmations will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Payment Settings Content -->
+                <div id="payment-settingsContent" class="admin-content">
+                    <h3>Pengaturan Metode Pembayaran</h3>
+                    <form id="paymentMethodForm" class="admin-form" style="grid-template-columns: 1fr 1fr 2fr auto;">
+                        <input type="hidden" id="paymentMethodId">
+                        <select id="paymentMethodType" required>
+                            <option value="">Pilih Tipe</option>
+                            <option value="Bank">Bank</option>
+                            <option value="E-Wallet">E-Wallet</option>
+                        </select>
+                        <input type="text" id="paymentMethodName" placeholder="Nama (contoh: BCA, GoPay)" required>
+                        <input type="text" id="paymentMethodNumber" placeholder="Nomor Rekening/ID" required>
+                        <button type="submit" id="submitPaymentMethodBtn">Tambah</button>
+                    </form>
+                    <div class="payment-methods-list" id="paymentMethodsList">
+                        <!-- Payment methods will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Category Management Content -->
+                <div id="categoriesContent" class="admin-content">
+                    <h3>Kelola Kategori Menu</h3>
+                    <form id="categoryForm" class="admin-form" style="grid-template-columns: 2fr auto;">
+                        <input type="hidden" id="categoryId">
+                        <input type="text" id="categoryName" placeholder="Nama Kategori Baru" required>
+                        <button type="submit" id="submitCategoryBtn">Tambah Kategori</button>
+                    </form>
+                    <div class="category-list" id="categoryList">
+                        <!-- Categories will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Keranjang Belanja</h3>
+            <button class="cart-close" id="closeCart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <div class="cart-footer">
+            <div class="promo-input-container" style="display:flex; gap:10px; margin-bottom:15px;">
+                <input type="text" class="promo-input" id="promoCode" placeholder="Masukkan kode promo" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:5px;">
+                <button class="apply-promo-btn" id="applyPromo" style="background-color: var(--dark-brown); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">Gunakan</button>
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">Rp 0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeCheckoutModal">&times;</span>
+            <h2>Detail Checkout</h2>
+            <form id="checkoutForm" class="checkout-form">
+                <input type="text" id="recipientName" placeholder="Nama Penerima" required>
+                <input type="text" id="recipientAddress" placeholder="Alamat Lengkap" required>
+                <input type="text" id="recipientPhone" placeholder="Nomor Telepon" required>
+                
+                <div class="payment-methods-container">
+                    <h4>Pilih Metode Pembayaran</h4>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="transfer-bank" required>
+                            <i class="fas fa-university"></i>
+                            <span>Transfer Bank</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="ewallet">
+                            <i class="fas fa-wallet"></i>
+                            <span>E-Wallet</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="cod">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Bayar di Tempat (COD)</span>
+                        </label>
+                    </div>
+                    <div class="payment-details-info" id="paymentDetailsInfo" style="display:none;">
+                        <!-- Payment details will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <button type="submit" style="width: 100%; padding: 15px; background-color: var(--primary-pink); color: white; border: none; border-radius: var(--border-radius); font-size: 1.1rem; cursor: pointer; margin-top: 1rem;">Konfirmasi Pesanan</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div id="orderDetailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeOrderDetailModal">&times;</span>
+            <h2>Detail Pesanan</h2>
+            <div class="order-details-info">
+                <p><strong>ID Pesanan:</strong> <span id="detailOrderId"></span></p>
+                <p><strong>Pemesan:</strong> <span id="detailCustomerName"></span></p>
+                <p><strong>Alamat:</strong> <span id="detailAddress"></span></p>
+                <p><strong>Telepon:</strong> <span id="detailPhone"></span></p>
+                <p><strong>Metode Pembayaran:</strong> <span id="detailPaymentMethod"></span></p>
+                <p><strong>Tanggal:</strong> <span id="detailDate"></span></p>
+                <p><strong>Status:</strong> <span id="detailStatus"></span></p>
+            </div>
+            <h3>Item Pesanan</h3>
+            <table class="order-items-table">
+                <thead>
+                    <tr>
+                        <th>Nama Menu</th>
+                        <th>Jumlah</th>
+                        <th>Harga</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="detailOrderItems">
+                    <!-- Items will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <div class="order-details-total">
+                Total: <span id="detailTotal"></span>
+            </div>
+            <div class="payment-note-section" id="paymentNoteSection" style="display:none;">
+                <p><strong>Catatan Pembayaran:</strong></p>
+                <p id="paymentNoteText"></p>
+            </div>
+            <button id="confirmPaymentBtn">Tandai Sudah Dibayar</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Dindalicious. Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const viewCustomerBtn = document.getElementById('viewCustomerBtn');
+            const viewOrdersBtn = document.getElementById('viewOrdersBtn');
+            const viewAdminBtn = document.getElementById('viewAdminBtn');
+            const customerView = document.getElementById('customerView');
+            const ordersView = document.getElementById('ordersView');
+            const adminView = document.getElementById('adminView');
+            const loginView = document.getElementById('loginView');
+            const menuGrid = document.getElementById('menuGrid');
+            const ordersList = document.getElementById('ordersList');
+            const menuForm = document.getElementById('menuForm');
+            const categoryForm = document.getElementById('categoryForm');
+            const paymentMethodForm = document.getElementById('paymentMethodForm');
+            const loginForm = document.getElementById('loginForm');
+            const adminMenuList = document.getElementById('adminMenuList');
+            const adminOrdersList = document.getElementById('adminOrdersList');
+            const categoryList = document.getElementById('categoryList');
+            const paymentConfirmationList = document.getElementById('paymentConfirmationList');
+            const paymentMethodsList = document.getElementById('paymentMethodsList');
+            const cartIcon = document.getElementById('cartIcon');
+            const cartSidebar = document.getElementById('cartSidebar');
+            const closeCart = document.getElementById('closeCart');
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartBadge = document.getElementById('cartBadge');
+            const cartTotalElement = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            const checkoutModal = document.getElementById('checkoutModal');
+            const checkoutForm = document.getElementById('checkoutForm');
+            const closeCheckoutModal = document.getElementById('closeCheckoutModal');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitCategoryBtn = document.getElementById('submitCategoryBtn');
+            const submitPaymentMethodBtn = document.getElementById('submitPaymentMethodBtn');
+            const menuIdInput = document.getElementById('menuId');
+            const categoryIdInput = document.getElementById('categoryId');
+            const paymentMethodIdInput = document.getElementById('paymentMethodId');
+            const searchInput = document.getElementById('searchInput');
+            const locationInput = document.getElementById('locationInput');
+            const applyPromoBtn = document.getElementById('applyPromo');
+            const promoCodeInput = document.getElementById('promoCode');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const ordersTab = document.getElementById('ordersTab');
+            const orderNotificationBadge = document.getElementById('orderNotificationBadge');
+            const paymentNotificationBadge = document.getElementById('paymentNotificationBadge');
+            const categoryTabsContainer = document.querySelector('.category-tabs');
+            const menuCategorySelect = document.getElementById('menuCategory');
+            const paymentDetailsInfo = document.getElementById('paymentDetailsInfo');
+            
+            // Image Upload Elements
+            const menuImageFileInput = document.getElementById('menuImageFile');
+            const chooseImageBtn = document.getElementById('chooseImageBtn');
+            let currentImageDataUrl = null;
+
+            // Order Detail Modal Elements
+            const orderDetailModal = document.getElementById('orderDetailModal');
+            const closeOrderDetailModal = document.getElementById('closeOrderDetailModal');
+            const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+
+            // State Management
+            const MENU_STORAGE_KEY = 'dindalicious_menu';
+            const CART_STORAGE_KEY = 'dindalicious_cart';
+            const ORDERS_STORAGE_KEY = 'dindalicious_orders';
+            const CATEGORIES_STORAGE_KEY = 'dindalicious_categories';
+            const PAYMENT_METHODS_KEY = 'dindalicious_payment_methods';
+            const ADMIN_LOGIN_KEY = 'dindalicious_admin_logged_in';
+
+            let menu = [];
+            let cart = [];
+            let orders = [];
+            let categories = [];
+            let paymentMethods = [];
+            let currentFilter = 'all';
+            let promoApplied = false;
+            let isAdminLoggedIn = localStorage.getItem(ADMIN_LOGIN_KEY) === 'true';
+
+            // Initial Data
+            const initialMenu = [
+                { id: 1, name: 'Nasi Goreng Special', description: 'Nasi goreng dengan telur mata sapi, ayam suwir, dan kerupuk', price: 35000, category: 'Makanan', imageUrl: 'https://i.ibb.co/L8y71bF/nasigoreng.jpg' },
+                { id: 2, name: 'Es Teh Manis', description: 'Teh manis dingin dengan gula asli', price: 8000, category: 'Minuman', imageUrl: 'https://i.ibb.co/6y4s6Hm/esteh.jpg' },
+                { id: 3, name: 'Ayam Bakar Taliwang', description: 'Ayam bakar khas Lombok dengan sambal plecing', price: 45000, category: 'Makanan', imageUrl: 'https://i.ibb.co/3zLJ4W8/ayambakar.jpg' },
+                { id: 4, name: 'Jus Alpukat', description: 'Jus alpukat segar dengan madu dan susu', price: 18000, category: 'Minuman', imageUrl: 'https://i.ibb.co/2k7pVcH/jusalpukat.jpg' },
+                { id: 5, name: 'Pisang Goreng Coklat', description: 'Pisang goreng dengan topping coklat dan susu kental manis', price: 15000, category: 'Dessert', imageUrl: 'https://i.ibb.co/L8y71bF/pisanggoreng.jpg' },
+            ];
+            const initialCategories = ['Makanan', 'Minuman', 'Snack', 'Dessert'];
+            const initialPaymentMethods = [
+                { id: 1, type: 'Bank', name: 'Bank Central Asia', number: '1234567890', holder: 'PT Dindalicious Indonesia' },
+                { id: 2, type: 'E-Wallet', name: 'GoPay', number: '08123456789', holder: 'PT Dindalicious Indonesia' },
+            ];
+
+            // Functions
+            const saveMenu = () => localStorage.setItem(MENU_STORAGE_KEY, JSON.stringify(menu));
+            const loadMenu = () => {
+                const storedMenu = localStorage.getItem(MENU_STORAGE_KEY);
+                menu = storedMenu ? JSON.parse(storedMenu) : initialMenu;
+                if (!storedMenu) saveMenu();
+            };
+
+            const saveCart = () => localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+            const loadCart = () => {
+                const storedCart = localStorage.getItem(CART_STORAGE_KEY);
+                cart = storedCart ? JSON.parse(storedCart) : [];
+            };
+
+            const saveOrders = () => localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
+            const loadOrders = () => {
+                const storedOrders = localStorage.getItem(ORDERS_STORAGE_KEY);
+                orders = storedOrders ? JSON.parse(storedOrders) : [];
+            };
+
+            const saveCategories = () => localStorage.setItem(CATEGORIES_STORAGE_KEY, JSON.stringify(categories));
+            const loadCategories = () => {
+                const storedCategories = localStorage.getItem(CATEGORIES_STORAGE_KEY);
+                categories = storedCategories ? JSON.parse(storedCategories) : initialCategories;
+                if (!storedCategories) saveCategories();
+            };
+
+            const savePaymentMethods = () => localStorage.setItem(PAYMENT_METHODS_KEY, JSON.stringify(paymentMethods));
+            const loadPaymentMethods = () => {
+                const storedMethods = localStorage.getItem(PAYMENT_METHODS_KEY);
+                paymentMethods = storedMethods ? JSON.parse(storedMethods) : initialPaymentMethods;
+                if (!storedMethods) savePaymentMethods();
+            };
+
+            const generateId = () => Date.now();
+
+            // View Switching
+            const showView = (view) => {
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.querySelectorAll('.nav-buttons button').forEach(b => b.classList.remove('active'));
+
+                if (view === 'customer') {
+                    customerView.classList.add('active');
+                    viewCustomerBtn.classList.add('active');
+                } else if (view === 'orders') {
+                    ordersView.classList.add('active');
+                    viewOrdersBtn.classList.add('active');
+                    renderOrders();
+                } else if (view === 'login') {
+                    loginView.classList.add('active');
+                } else if (view === 'admin') {
+                    if (isAdminLoggedIn) {
+                        adminView.classList.add('active');
+                        viewAdminBtn.classList.add('active');
+                        renderAdminList();
+                        renderAdminOrders();
+                        renderPaymentConfirmations();
+                        renderPaymentMethods();
+                        updateOrderNotificationBadge();
+                        updatePaymentNotificationBadge();
+                    } else {
+                        showView('login');
+                    }
+                }
+            };
+
+            // Login/Logout
+            const adminLogin = (e) => {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                if (username === 'admin' && password === 'admin123') {
+                    isAdminLoggedIn = true;
+                    localStorage.setItem(ADMIN_LOGIN_KEY, 'true');
+                    showNotification('Login berhasil!');
+                    showView('admin');
+                    loginForm.reset();
+                } else {
+                    showNotification('Username atau password salah!', 'error');
+                }
+            };
+
+            const adminLogout = () => {
+                isAdminLoggedIn = false;
+                localStorage.setItem(ADMIN_LOGIN_KEY, 'false');
+                showNotification('Anda telah logout.');
+                showView('customer');
+            };
+
+            // Admin Tab Switching
+            const switchAdminTab = (tab) => {
+                document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
+                
+                const targetTab = document.querySelector(`[data-tab="${tab}"]`);
+                const targetContent = document.getElementById(`${tab}Content`);
+
+                if(targetTab) targetTab.classList.add('active');
+                if(targetContent) targetContent.classList.add('active');
+
+                if (tab === 'orders') {
+                    renderAdminOrders();
+                } else if (tab === 'payments') {
+                    renderPaymentConfirmations();
+                } else if (tab === 'payment-settings') {
+                    renderPaymentMethods();
+                } else if (tab === 'categories') {
+                    renderCategoryManagement();
+                }
+            };
+
+            // Image Upload Handler
+            chooseImageBtn.addEventListener('click', () => menuImageFileInput.click());
+            menuImageFileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        currentImageDataUrl = event.target.result;
+                        chooseImageBtn.textContent = 'Gambar Dipilih';
+                        chooseImageBtn.style.backgroundColor = 'var(--success-green)';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Rendering Functions
+            const renderCategoryTabs = () => {
+                categoryTabsContainer.innerHTML = '<div class="category-tab active" data-category="all">Semua</div>';
+                categories.forEach(cat => {
+                    const tab = document.createElement('div');
+                    tab.className = 'category-tab';
+                    tab.setAttribute('data-category', cat);
+                    tab.textContent = cat;
+                    categoryTabsContainer.appendChild(tab);
+                });
+
+                document.querySelectorAll('.category-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        currentFilter = tab.getAttribute('data-category');
+                        renderMenu(currentFilter);
+                    });
+                });
+            };
+            
+            const populateCategoryDropdown = () => {
+                menuCategorySelect.innerHTML = '';
+                categories.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat;
+                    menuCategorySelect.appendChild(option);
+                });
+            };
+
+            const renderMenu = (filter = 'all') => {
+                menuGrid.innerHTML = '';
+                const filteredMenu = filter === 'all' ? menu : menu.filter(item => item.category === filter);
+                
+                if (filteredMenu.length === 0) {
+                    menuGrid.innerHTML = '<p>Belum ada menu untuk kategori ini.</p>';
+                    return;
+                }
+                
+                filteredMenu.forEach(item => {
+                    const menuCard = document.createElement('div');
+                    menuCard.className = 'menu-card';
+                    menuCard.innerHTML = `
+                        <img src="${item.imageUrl || `https://i.ibb.co/2k7pVcH/placeholder.png`}" alt="${item.name}">
+                        <div class="menu-card-content">
+                            <h3>${item.name}</h3>
+                            <p>${item.description}</p>
+                            <div class="price">Rp ${item.price.toLocaleString('id-ID')}</div>
+                            <button class="add-to-cart-btn" data-id="${item.id}"><i class="fas fa-cart-plus"></i> Tambah</button>
+                        </div>
+                    `;
+                    menuGrid.appendChild(menuCard);
+                });
+                
+                document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const itemId = parseInt(btn.getAttribute('data-id'));
+                        addToCart(itemId);
+                    });
+                });
+            };
+
+            const renderAdminList = () => {
+                adminMenuList.innerHTML = '';
+                if (menu.length === 0) {
+                    adminMenuList.innerHTML = '<tr><td colspan="6">Tidak ada menu.</td></tr>';
+                    return;
+                }
+                
+                menu.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><img src="${item.imageUrl || `https://i.ibb.co/2k7pVcH/placeholder.png`}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;"></td>
+                        <td>${item.name}</td>
+                        <td>${item.category}</td>
+                        <td>${item.description}</td>
+                        <td>Rp ${item.price.toLocaleString('id-ID')}</td>
+                        <td class="actions">
+                            <button class="edit-btn" data-id="${item.id}">Edit</button>
+                            <button class="delete-btn" data-id="${item.id}">Hapus</button>
+                        </td>
+                    `;
+                    adminMenuList.appendChild(row);
+                });
+                
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const itemId = parseInt(btn.getAttribute('data-id'));
+                        editMenu(itemId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const itemId = parseInt(btn.getAttribute('data-id'));
+                        deleteMenu(itemId);
+                    });
+                });
+            };
+
+            const renderPaymentMethods = () => {
+                paymentMethodsList.innerHTML = '';
+                if (paymentMethods.length === 0) {
+                    paymentMethodsList.innerHTML = '<p>Belum ada metode pembayaran yang ditambahkan.</p>';
+                    return;
+                }
+
+                paymentMethods.forEach(method => {
+                    const methodItem = document.createElement('div');
+                    methodItem.className = 'payment-method-item';
+                    methodItem.innerHTML = `
+                        <div class="details">
+                            <h4>${method.name} (${method.type})</h4>
+                            <p>No. ${method.number}</p>
+                            <p>a.n. ${method.holder}</p>
+                        </div>
+                        <div class="actions">
+                            <button class="edit-btn" data-id="${method.id}">Edit</button>
+                            <button class="delete-btn" data-id="${method.id}">Hapus</button>
+                        </div>
+                    `;
+                    paymentMethodsList.appendChild(methodItem);
+                });
+
+                document.querySelectorAll('#paymentMethodsList .edit-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const methodId = parseInt(btn.getAttribute('data-id'));
+                        editPaymentMethod(methodId);
+                    });
+                });
+
+                document.querySelectorAll('#paymentMethodsList .delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const methodId = parseInt(btn.getAttribute('data-id'));
+                        deletePaymentMethod(methodId);
+                    });
+                });
+            };
+            
+            const renderPaymentConfirmations = () => {
+                paymentConfirmationList.innerHTML = '';
+                const pendingPayments = orders.filter(o => o.status === 'Menunggu Pembayaran' && o.paymentMethod !== 'cod');
+
+                if (pendingPayments.length === 0) {
+                    paymentConfirmationList.innerHTML = '<p>Tidak ada pembayaran yang perlu dikonfirmasi.</p>';
+                    return;
+                }
+
+                pendingPayments.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(order => {
+                    const paymentItem = document.createElement('div');
+                    paymentItem.className = 'payment-confirmation-item';
+                    paymentItem.innerHTML = `
+                        <h4>Pesanan #${order.id} - ${order.recipientName}</h4>
+                        <p>Tanggal: ${new Date(order.date).toLocaleString('id-ID')}</p>
+                        <p>Metode: ${order.paymentMethod.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+                        <p class="total">Total: Rp ${order.total.toLocaleString('id-ID')}</p>
+                        <div class="confirm-payment-form">
+                            <textarea placeholder="Tambahkan catatan pembayaran (opsional)" id="paymentNote-${order.id}"></textarea>
+                            <button class="confirm-payment-action-btn" data-order-id="${order.id}">Konfirmasi Pembayaran</button>
+                        </div>
+                    `;
+                    paymentConfirmationList.appendChild(paymentItem);
+                });
+
+                document.querySelectorAll('.confirm-payment-action-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const orderId = parseInt(btn.getAttribute('data-order-id'));
+                        const note = document.getElementById(`paymentNote-${orderId}`).value;
+                        confirmPaymentFromList(orderId, note);
+                    });
+                });
+            };
+
+            const renderCategoryManagement = () => {
+                categoryList.innerHTML = '';
+                categories.forEach(cat => {
+                    const catItem = document.createElement('div');
+                    catItem.className = 'category-item';
+                    catItem.innerHTML = `
+                        <span>${cat}</span>
+                        <button class="edit-category-btn" data-name="${cat}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-category-btn" data-name="${cat}"><i class="fas fa-trash"></i></button>
+                    `;
+                    categoryList.appendChild(catItem);
+                });
+
+                document.querySelectorAll('.edit-category-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const categoryName = e.currentTarget.getAttribute('data-name');
+                        editCategory(categoryName);
+                    });
+                });
+
+                document.querySelectorAll('.delete-category-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const categoryName = e.currentTarget.getAttribute('data-name');
+                        deleteCategory(categoryName);
+                    });
+                });
+            };
+
+            const renderAdminOrders = () => {
+                adminOrdersList.innerHTML = '';
+                if (orders.length === 0) {
+                    adminOrdersList.innerHTML = '<tr><td colspan="6">Belum ada pesanan.</td></tr>';
+                    return;
+                }
+
+                orders.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(order => {
+                    const row = document.createElement('tr');
+                    const statusClass = `status-${order.status.toLowerCase().replace(/\s+/g, '-')}`;
+                    row.innerHTML = `
+                        <td>#${order.id}</td>
+                        <td>${order.recipientName}</td>
+                        <td>${new Date(order.date).toLocaleString('id-ID')}</td>
+                        <td>Rp ${order.total.toLocaleString('id-ID')}</td>
+                        <td>
+                            <select class="status-select ${statusClass}" data-order-id="${order.id}">
+                                <option value="Menunggu Pembayaran" ${order.status === 'Menunggu Pembayaran' ? 'selected' : ''}>Menunggu Pembayaran</option>
+                                <option value="Dibayar" ${order.status === 'Dibayar' ? 'selected' : ''}>Dibayar</option>
+                                <option value="Sedang Diproses" ${order.status === 'Sedang Diproses' ? 'selected' : ''}>Sedang Diproses</option>
+                                <option value="Sedang Dikirim" ${order.status === 'Sedang Dikirim' ? 'selected' : ''}>Sedang Dikirim</option>
+                                <option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                                <option value="Dibatalkan" ${order.status === 'Dibatalkan' ? 'selected' : ''}>Dibatalkan</option>
+                            </select>
+                        </td>
+                        <td class="actions">
+                            <button class="view-details-btn" data-id="${order.id}">Detail</button>
+                        </td>
+                    `;
+                    adminOrdersList.appendChild(row);
+                });
+
+                document.querySelectorAll('.status-select').forEach(select => {
+                    select.addEventListener('change', (e) => {
+                        const orderId = parseInt(e.target.getAttribute('data-order-id'));
+                        const newStatus = e.target.value;
+                        updateOrderStatus(orderId, newStatus);
+                    });
+                });
+
+                document.querySelectorAll('.view-details-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const orderId = parseInt(btn.getAttribute('data-id'));
+                        showOrderDetailModal(orderId);
+                    });
+                });
+            };
+
+            const showOrderDetailModal = (orderId) => {
+                const order = orders.find(o => o.id === orderId);
+                if (!order) return;
+
+                document.getElementById('detailOrderId').textContent = `#${order.id}`;
+                document.getElementById('detailCustomerName').textContent = order.recipientName;
+                document.getElementById('detailAddress').textContent = order.address;
+                document.getElementById('detailPhone').textContent = order.phone;
+                document.getElementById('detailPaymentMethod').textContent = order.paymentMethod.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                document.getElementById('detailDate').textContent = new Date(order.date).toLocaleString('id-ID');
+                document.getElementById('detailStatus').textContent = order.status;
+                
+                const itemsTableBody = document.getElementById('detailOrderItems');
+                itemsTableBody.innerHTML = '';
+                order.items.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>Rp ${item.price.toLocaleString('id-ID')}</td>
+                        <td>Rp ${(item.price * item.quantity).toLocaleString('id-ID')}</td>
+                    `;
+                    itemsTableBody.appendChild(row);
+                });
+
+                document.getElementById('detailTotal').textContent = `Rp ${order.total.toLocaleString('id-ID')}`;
+                
+                confirmPaymentBtn.dataset.orderId = orderId;
+                
+                if (order.status === 'Selesai' || order.status === 'Dibatalkan') {
+                    confirmPaymentBtn.style.display = 'none';
+                } else {
+                    confirmPaymentBtn.style.display = 'block';
+                    if (order.paymentMethod === 'cod') {
+                        confirmPaymentBtn.textContent = 'Konfirmasi Siap Dikirim';
+                    } else {
+                        confirmPaymentBtn.textContent = 'Tandai Sudah Dibayar';
+                    }
+                }
+
+                orderDetailModal.style.display = 'flex';
+            };
+
+            const updateOrderStatus = (orderId, newStatus) => {
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+                if (orderIndex !== -1) {
+                    orders[orderIndex].status = newStatus;
+                    saveOrders();
+                    showNotification(`Status pesanan #${orderId} diperbarui menjadi "${newStatus}"`);
+                    updateOrderNotificationBadge();
+                    updatePaymentNotificationBadge();
+                }
+            };
+            
+            const updateOrderNotificationBadge = () => {
+                const unprocessedCount = orders.filter(o => o.status === 'Menunggu Pembayaran' || o.status === 'Dibayar' || o.status === 'Sedang Diproses').length;
+                if (unprocessedCount > 0) {
+                    orderNotificationBadge.textContent = unprocessedCount;
+                    orderNotificationBadge.style.display = 'flex';
+                } else {
+                    orderNotificationBadge.style.display = 'none';
+                }
+            };
+            
+            const updatePaymentNotificationBadge = () => {
+                const pendingCount = orders.filter(o => o.status === 'Menunggu Pembayaran' && o.paymentMethod !== 'cod').length;
+                if (pendingCount > 0) {
+                    paymentNotificationBadge.textContent = pendingCount;
+                    paymentNotificationBadge.style.display = 'flex';
+                } else {
+                    paymentNotificationBadge.style.display = 'none';
+                }
+            };
+
+            const renderCart = () => {
+                cartItemsContainer.innerHTML = '';
+                if (cart.length === 0) {
+                    cartItemsContainer.innerHTML = '<p>Keranjang Anda kosong.</p>';
+                    cartTotalElement.textContent = 'Rp 0';
+                    return;
+                }
+
+                let total = 0;
+                cart.forEach(item => {
+                    const cartItemEl = document.createElement('div');
+                    cartItemEl.className = 'cart-item';
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    cartItemEl.innerHTML = `
+                        <img src="${item.imageUrl || `https://i.ibb.co/2k7pVcH/placeholder.png`}" alt="${item.name}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')} x ${item.quantity}</div>
+                            <div class="cart-item-subtotal">Rp ${itemTotal.toLocaleString('id-ID')}</div>
+                            <div class="quantity-control">
+                                <button class="quantity-btn" data-id="${item.id}" data-action="decrease">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="quantity-btn" data-id="${item.id}" data-action="increase">+</button>
+                            </div>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(cartItemEl);
+                });
+                
+                if (promoApplied) total = total * 0.5;
+                cartTotalElement.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+                
+                document.querySelectorAll('.quantity-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const itemId = parseInt(btn.getAttribute('data-id'));
+                        const action = btn.getAttribute('data-action');
+                        updateQuantity(itemId, action);
+                    });
+                });
+            };
+
+            const renderOrders = () => {
+                ordersList.innerHTML = '';
+                if (orders.length === 0) {
+                    ordersList.innerHTML = '<p>Belum ada pesanan.</p>';
+                    return;
+                }
+                
+                orders.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(order => {
+                    const orderEl = document.createElement('div');
+                    orderEl.className = 'order-item';
+                    const orderDate = new Date(order.date).toLocaleString('id-ID');
+                    orderEl.innerHTML = `
+                        <h3>Pesanan #${order.id}</h3>
+                        <p>Tanggal: ${orderDate}</p>
+                        <p>Status: <span style="color: var(--primary-pink); font-weight: bold;">${order.status}</span></p>
+                        <p>Total: Rp ${order.total.toLocaleString('id-ID')}</p>
+                    `;
+                    ordersList.appendChild(orderEl);
+                });
+            };
+
+            const updateCartBadge = () => {
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartBadge.textContent = totalItems;
+            };
+
+            // CRUD Operations for Menu
+            const addOrUpdateMenu = (e) => {
+                e.preventDefault();
+                const id = menuIdInput.value ? parseInt(menuIdInput.value) : generateId();
+                const name = document.getElementById('menuName').value;
+                const description = document.getElementById('menuDescription').value;
+                const price = parseInt(document.getElementById('menuPrice').value);
+                const category = document.getElementById('menuCategory').value;
+                const imageUrl = currentImageDataUrl; // Use uploaded image
+
+                const newItem = { id, name, description, price, category, imageUrl };
+
+                if (menuIdInput.value) {
+                    const index = menu.findIndex(item => item.id === id);
+                    if (index !== -1) menu[index] = newItem;
+                } else {
+                    menu.push(newItem);
+                }
+
+                saveMenu();
+                renderMenu(currentFilter);
+                renderAdminList();
+                menuForm.reset();
+                menuIdInput.value = '';
+                submitBtn.textContent = 'Tambah Menu';
+                
+                // Reset image upload
+                currentImageDataUrl = null;
+                chooseImageBtn.textContent = 'Pilih Gambar';
+                chooseImageBtn.style.backgroundColor = 'var(--info-blue)';
+            };
+
+            const editMenu = (id) => {
+                const item = menu.find(m => m.id === id);
+                if (item) {
+                    document.getElementById('menuId').value = item.id;
+                    document.getElementById('menuName').value = item.name;
+                    document.getElementById('menuDescription').value = item.description;
+                    document.getElementById('menuPrice').value = item.price;
+                    document.getElementById('menuCategory').value = item.category;
+                    
+                    // Display current image
+                    if(item.imageUrl) {
+                        currentImageDataUrl = item.imageUrl;
+                        chooseImageBtn.textContent = 'Gambar Dipilih';
+                        chooseImageBtn.style.backgroundColor = 'var(--success-green)';
+                    }
+
+                    submitBtn.textContent = 'Update Menu';
+                }
+            };
+
+            const deleteMenu = (id) => {
+                if (confirm('Apakah Anda yakin ingin menghapus menu ini?')) {
+                    menu = menu.filter(item => item.id !== id);
+                    saveMenu();
+                    renderMenu(currentFilter);
+                    renderAdminList();
+                }
+            };
+            
+            // CRUD for Payment Methods
+            const addOrUpdatePaymentMethod = (e) => {
+                e.preventDefault();
+                const id = paymentMethodIdInput.value ? parseInt(paymentMethodIdInput.value) : generateId();
+                const type = document.getElementById('paymentMethodType').value;
+                const name = document.getElementById('paymentMethodName').value;
+                const number = document.getElementById('paymentMethodNumber').value;
+                const holder = 'PT Dindalicious Indonesia'; // Simplified for demo
+
+                const newMethod = { id, type, name, number, holder };
+
+                if (paymentMethodIdInput.value) {
+                    const index = paymentMethods.findIndex(m => m.id === id);
+                    if (index !== -1) paymentMethods[index] = newMethod;
+                } else {
+                    paymentMethods.push(newMethod);
+                }
+
+                savePaymentMethods();
+                renderPaymentMethods();
+                paymentMethodForm.reset();
+                paymentMethodIdInput.value = '';
+                submitPaymentMethodBtn.textContent = 'Tambah';
+            };
+
+            const editPaymentMethod = (id) => {
+                const method = paymentMethods.find(m => m.id === id);
+                if (method) {
+                    document.getElementById('paymentMethodId').value = method.id;
+                    document.getElementById('paymentMethodType').value = method.type;
+                    document.getElementById('paymentMethodName').value = method.name;
+                    document.getElementById('paymentMethodNumber').value = method.number;
+                    submitPaymentMethodBtn.textContent = 'Update';
+                }
+            };
+
+            const deletePaymentMethod = (id) => {
+                if (confirm('Apakah Anda yakin ingin menghapus metode pembayaran ini?')) {
+                    paymentMethods = paymentMethods.filter(m => m.id !== id);
+                    savePaymentMethods();
+                    renderPaymentMethods();
+                }
+            };
+
+            // CRUD Operations for Categories
+            const addOrUpdateCategory = (e) => {
+                e.preventDefault();
+                const categoryName = document.getElementById('categoryName').value.trim();
+                const categoryId = categoryIdInput.value;
+
+                if (categoryId) { // Update
+                    const index = categories.findIndex(cat => cat === categoryId);
+                    if (index !== -1) {
+                        menu.forEach(item => {
+                            if (item.category === categoryId) {
+                                item.category = categoryName;
+                            }
+                        });
+                        categories[index] = categoryName;
+                    }
+                } else { // Create
+                    if (!categories.includes(categoryName)) {
+                        categories.push(categoryName);
+                    } else {
+                        showNotification('Kategori sudah ada!', 'error');
+                        return;
+                    }
+                }
+
+                saveCategories();
+                saveMenu();
+                renderCategoryManagement();
+                renderCategoryTabs();
+                populateCategoryDropdown();
+                renderAdminList();
+                
+                categoryForm.reset();
+                categoryIdInput.value = '';
+                submitCategoryBtn.textContent = 'Tambah Kategori';
+            };
+
+            const editCategory = (name) => {
+                document.getElementById('categoryId').value = name;
+                document.getElementById('categoryName').value = name;
+                submitCategoryBtn.textContent = 'Update Kategori';
+            };
+
+            const deleteCategory = (name) => {
+                const isCategoryInUse = menu.some(item => item.category === name);
+                if (isCategoryInUse) {
+                    showNotification(`Tidak dapat menghapus kategori "${name}" karena masih digunakan oleh menu.`, 'error');
+                    return;
+                }
+                if (confirm(`Apakah Anda yakin ingin menghapus kategori "${name}"?`)) {
+                    categories = categories.filter(cat => cat !== name);
+                    saveCategories();
+                    renderCategoryManagement();
+                    renderCategoryTabs();
+                    populateCategoryDropdown();
+                }
+            };
+
+            // Cart Functions
+            const addToCart = (id) => {
+                const item = menu.find(m => m.id === id);
+                if (item) {
+                    const existingItem = cart.find(c => c.id === id);
+                    if (existingItem) {
+                        existingItem.quantity++;
+                    } else {
+                        cart.push({ ...item, quantity: 1 });
+                    }
+                    saveCart();
+                    updateCartBadge();
+                    renderCart();
+                    showNotification(`${item.name} ditambahkan ke keranjang!`);
+                }
+            };
+
+            const updateQuantity = (id, action) => {
+                const item = cart.find(c => c.id === id);
+                if (item) {
+                    if (action === 'increase') {
+                        item.quantity++;
+                    } else if (action === 'decrease' && item.quantity > 1) {
+                        item.quantity--;
+                    } else if (action === 'decrease' && item.quantity === 1) {
+                        cart = cart.filter(c => c.id !== id);
+                    }
+                    saveCart();
+                    updateCartBadge();
+                    renderCart();
+                }
+            };
+
+            const checkout = (e) => {
+                e.preventDefault();
+                if (cart.length === 0) {
+                    showNotification('Keranjang Anda kosong!');
+                    return;
+                }
+                
+                const recipientName = document.getElementById('recipientName').value;
+                const recipientAddress = document.getElementById('recipientAddress').value;
+                const recipientPhone = document.getElementById('recipientPhone').value;
+                const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+                let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                if (promoApplied) total = total * 0.5;
+                
+                const initialStatus = paymentMethod === 'cod' ? 'Sedang Diproses' : 'Menunggu Pembayaran';
+                
+                const order = {
+                    id: generateId(),
+                    items: [...cart],
+                    total: total,
+                    date: new Date().toISOString(),
+                    status: initialStatus,
+                    recipientName: recipientName,
+                    address: recipientAddress,
+                    phone: recipientPhone,
+                    paymentMethod: paymentMethod
+                };
+                
+                orders.push(order);
+                saveOrders();
+                
+                cart = [];
+                saveCart();
+                updateCartBadge();
+                renderCart();
+                
+                checkoutModal.style.display = 'none';
+                checkoutForm.reset();
+                
+                showNotification('Pesanan berhasil dibuat! Terima kasih telah berbelanja di Dindalicious.');
+                
+                promoApplied = false;
+                promoCodeInput.value = '';
+            };
+
+            const confirmPaymentOrStatus = () => {
+                const orderId = parseInt(confirmPaymentBtn.dataset.orderId);
+                const order = orders.find(o => o.id === orderId);
+
+                if (!order) return;
+
+                let newStatus;
+                if (order.paymentMethod === 'cod') {
+                    newStatus = 'Sedang Dikirim';
+                } else {
+                    newStatus = 'Dibayar';
+                }
+
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+                if (orderIndex !== -1) {
+                    orders[orderIndex].status = newStatus;
+                    saveOrders();
+                    showNotification(`Pesanan #${orderId} telah diperbarui ke status "${newStatus}".`);
+                    orderDetailModal.style.display = 'none';
+                    renderAdminOrders();
+                    updateOrderNotificationBadge();
+                    updatePaymentNotificationBadge();
+                }
+            };
+
+            const confirmPaymentFromList = (orderId, note) => {
+                const orderIndex = orders.findIndex(o => o.id === orderId);
+
+                if (orderIndex !== -1) {
+                    orders[orderIndex].status = 'Dibayar';
+                    if(note) {
+                        orders[orderIndex].paymentNote = note;
+                    }
+                    saveOrders();
+                    showNotification(`Pembayaran untuk pesanan #${orderId} telah dikonfirmasi.`);
+                    renderPaymentConfirmations();
+                    renderAdminOrders();
+                    updateOrderNotificationBadge();
+                    updatePaymentNotificationBadge();
+                }
+            };
+
+            const showNotification = (message, type = 'success') => {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'error' ? '#f44336' : 'var(--primary-pink)'};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 2000;
+                    max-width: 300px;
+                `;
+                notification.innerHTML = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 3000);
+            };
+
+            // Event Listeners
+            viewCustomerBtn.addEventListener('click', () => showView('customer'));
+            viewOrdersBtn.addEventListener('click', () => showView('orders'));
+            viewAdminBtn.addEventListener('click', () => showView('admin'));
+            logoutBtn.addEventListener('click', adminLogout);
+            loginForm.addEventListener('submit', adminLogin);
+            menuForm.addEventListener('submit', addOrUpdateMenu);
+            categoryForm.addEventListener('submit', addOrUpdateCategory);
+            paymentMethodForm.addEventListener('submit', addOrUpdatePaymentMethod);
+            
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchAdminTab(tab.getAttribute('data-tab')));
+            });
+
+            cartIcon.addEventListener('click', () => {
+                renderCart();
+                cartSidebar.classList.add('open');
+            });
+            
+            closeCart.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    cartSidebar.classList.remove('open');
+                } else {
+                    cartSidebar.classList.remove('open');
+                }
+            });
+            
+            checkoutBtn.addEventListener('click', () => {
+                if(cart.length === 0) {
+                    showNotification('Keranjang Anda kosong!');
+                    return;
+                }
+                checkoutModal.style.display = 'flex';
+            });
+
+            closeCheckoutModal.addEventListener('click', () => {
+                checkoutModal.style.display = 'none';
+            });
+            
+            closeOrderDetailModal.addEventListener('click', () => {
+                orderDetailModal.style.display = 'none';
+            });
+
+            confirmPaymentBtn.addEventListener('click', confirmPaymentOrStatus);
+
+            checkoutForm.addEventListener('submit', checkout);
+            
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredMenu = menu.filter(item => 
+                    item.name.toLowerCase().includes(searchTerm) || 
+                    item.description.toLowerCase().includes(searchTerm)
+                );
+                
+                menuGrid.innerHTML = '';
+                if (filteredMenu.length === 0) {
+                    menuGrid.innerHTML = '<p>Tidak ada menu yang ditemukan.</p>';
+                    return;
+                }
+                
+                filteredMenu.forEach(item => {
+                    const menuCard = document.createElement('div');
+                    menuCard.className = 'menu-card';
+                    menuCard.innerHTML = `
+                        <img src="${item.imageUrl || `https://i.ibb.co/2k7pVcH/placeholder.png`}" alt="${item.name}">
+                        <div class="menu-card-content">
+                            <h3>${item.name}</h3>
+                            <p>${item.description}</p>
+                            <div class="price">Rp ${item.price.toLocaleString('id-ID')}</div>
+                            <button class="add-to-cart-btn" data-id="${item.id}"><i class="fas fa-cart-plus"></i> Tambah</button>
+                        </div>
+                    `;
+                    menuGrid.appendChild(menuCard);
+                });
+                
+                document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const itemId = parseInt(btn.getAttribute('data-id'));
+                        addToCart(itemId);
+                    });
+                });
+            });
+            
+            applyPromoBtn.addEventListener('click', () => {
+                const promoCode = promoCodeInput.value.trim().toUpperCase();
+                if (promoCode === 'DINDAHEMAT') {
+                    promoApplied = true;
+                    renderCart();
+                    showNotification('Promo berhasil diterapkan! Diskon 50%');
+                } else {
+                    showNotification('Kode promo tidak valid', 'error');
+                }
+            });
+
+            // Style payment options on click
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // Show payment details
+                    const selectedMethod = this.querySelector('input').value;
+                    if (selectedMethod === 'transfer-bank' || selectedMethod === 'ewallet') {
+                        const relevantMethods = paymentMethods.filter(m => 
+                            (selectedMethod === 'transfer-bank' && m.type === 'Bank') || 
+                            (selectedMethod === 'ewallet' && m.type === 'E-Wallet')
+                        );
+                        let detailsHTML = `<strong>Silakan transfer ke:</strong><br>`;
+                        if(relevantMethods.length > 0) {
+                            detailsHTML += relevantMethods.map(m => `<p><strong>${m.name}</strong><br>No. ${m.number}<br>a.n. ${m.holder}</p>`).join('');
+                        } else {
+                            detailsHTML = `<p>Belum ada metode pembayaran yang ditetapkan untuk opsi ini.</p>`;
+                        }
+                        paymentDetailsInfo.innerHTML = detailsHTML;
+                        paymentDetailsInfo.style.display = 'block';
+                    } else {
+                        paymentDetailsInfo.style.display = 'none';
+                    }
+                });
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!cartSidebar.contains(e.target) && !cartIcon.contains(e.target)) {
+                    cartSidebar.classList.remove('open');
+                }
+                if (e.target === checkoutModal) {
+                    checkoutModal.style.display = 'none';
+                }
+                if (e.target === orderDetailModal) {
+                    orderDetailModal.style.display = 'none';
+                }
+            });
+            
+            // Initial Load
+            loadCategories();
+            loadMenu();
+            loadCart();
+            loadOrders();
+            loadPaymentMethods();
+            
+            renderCategoryTabs();
+            populateCategoryDropdown();
+            renderMenu();
+            renderAdminList();
+            updateCartBadge();
+        });
+    </script>
+</body>
+</html>
